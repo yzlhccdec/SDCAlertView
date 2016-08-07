@@ -22,7 +22,7 @@ final class ActionSheetView: AlertControllerView {
         didSet { self.actionsCollectionView.actionTapped = self.actionTappedHandler }
     }
 
-    override var visualStyle: VisualStyle! {
+    override var visualStyle: AlertVisualStyle! {
         didSet {
             let widthOffset = self.visualStyle.contentPadding.left + self.visualStyle.contentPadding.right
             self.titleWidthConstraint.constant -= widthOffset
@@ -44,7 +44,7 @@ final class ActionSheetView: AlertControllerView {
         self.cancelActionView?.layer.cornerRadius = self.visualStyle.cornerRadius
         self.cancelActionView?.layer.masksToBounds = true
 
-        self.cancelLabel?.textColor = self.visualStyle.textColor(forAction: self.cancelAction)
+        self.cancelLabel?.textColor = self.visualStyle.textColor(forAction: self.cancelAction) ?? self.tintColor
         self.cancelLabel?.font = self.visualStyle.font(forAction: self.cancelAction)
         let cancelButtonBackground = UIImage.imageWithColor(self.visualStyle.actionHighlightColor)
         self.cancelButton?.setBackgroundImage(cancelButtonBackground, forState: .Highlighted)
@@ -67,7 +67,7 @@ final class ActionSheetView: AlertControllerView {
 
     override func tintColorDidChange() {
         super.tintColorDidChange()
-        self.cancelLabel?.textColor = self.tintColor
+        self.cancelLabel?.textColor = self.visualStyle.textColor(forAction: self.cancelAction) ?? self.tintColor
     }
 
     @IBAction private func cancelTapped() {

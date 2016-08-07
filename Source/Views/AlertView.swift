@@ -12,7 +12,7 @@ class AlertView: AlertControllerView {
         set { self.actionsCollectionView.actionTapped = newValue }
     }
 
-    override var visualStyle: VisualStyle! {
+    override var visualStyle: AlertVisualStyle! {
         didSet { self.textFieldsViewController?.visualStyle = self.visualStyle }
     }
 
@@ -198,7 +198,12 @@ class AlertView: AlertControllerView {
         }
         self.scrollView.sdc_alignEdges([.Left, .Right], withView: self.primaryView)
         self.scrollView.layoutIfNeeded()
-        self.scrollView.sdc_pinHeight(self.scrollView.contentSize.height)
+
+        let scrollViewHeight = self.scrollView.contentSize.height
+        let constraint = NSLayoutConstraint(item: self.scrollView, attribute: .Height, relatedBy: .Equal,
+            toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: scrollViewHeight)
+        constraint.priority = UILayoutPriorityDefaultHigh
+        self.scrollView.addConstraint(constraint)
     }
     
     private func createPrimaryViewConstraints() {

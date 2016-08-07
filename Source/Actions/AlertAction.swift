@@ -7,7 +7,7 @@ The action's style
 - Preferred:   The action will take a style that indicates it's the preferred option
 - Destructive: The action will convey that this action will do something destructive
 */
-@objc
+@objc(SDCAlertActionStyle)
 public enum AlertActionStyle: Int {
     case Default
     case Preferred
@@ -48,7 +48,8 @@ public class AlertAction: NSObject {
         self.handler = handler
     }
 
-    var handler: (AlertAction -> Void)?
+    /// A closure that gets executed when the user taps on this actions in the UI
+    public var handler: (AlertAction -> Void)?
 
     /// The plain title for the action. Uses `attributedTitle` directly.
     private(set) public var title: String? {

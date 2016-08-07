@@ -1,5 +1,6 @@
 import UIKit
 
+private var kDidAssignFirstResponderToken: dispatch_once_t = 0
 /**
 The alert controller's style.
 
@@ -8,7 +9,7 @@ The alert controller's style.
                iPad.
 - Alert:       The standard alert style that asks the user for information or confirmation.
 */
-@objc
+@objc(SDCAlertControllerStyle)
 public enum AlertControllerStyle: Int {
     case ActionSheet
     case Alert
@@ -22,12 +23,15 @@ The layout of the alert's actions. Only applies to the Alert style alerts, not A
 - Vertical:   Display the actions vertically
 - Horizontal: Display the actions horizontally
 */
-@objc
+@objc(SDCActionLayout)
 public enum ActionLayout: Int {
     case Automatic
     case Vertical
     case Horizontal
 }
+
+@available(*, deprecated, renamed="AlertVisualStyle")
+public typealias DefaultVisualStyle = AlertVisualStyle
 
 @objc(SDCAlertController)
 public class AlertController: UIViewController {
@@ -91,13 +95,9 @@ public class AlertController: UIViewController {
     }
 
     /// The layout of the actions in the alert.
-    public var actionLayout: ActionLayout? {
-        get { return (self.alertView as? AlertView)?.actionLayout }
-        set {
-            if let newValue = newValue {
-                (self.alertView as? AlertView)?.actionLayout = newValue
-            }
-        }
+    public var actionLayout: ActionLayout {
+        get { return (self.alertView as? AlertView)?.actionLayout ?? .Automatic }
+        set { (self.alertView as? AlertView)?.actionLayout = newValue }
     }
 
     /// The text fields that are added to the alert. Does nothing when used with an action sheet.
@@ -108,18 +108,17 @@ public class AlertController: UIViewController {
         AlertBehaviors.defaultBehaviorsForAlertWithStyle(self.preferredStyle)
 
     /// A closure that, when set, returns whether the alert or action sheet should dismiss after the user taps
-    /// on an action.
+    /// on an action. If it returns false, the AlertAction handler will not be executed.
     public var shouldDismissHandler: (AlertAction? -> Bool)?
 
     /// The visual style that applies to the alert or action sheet.
-    public lazy var visualStyle: VisualStyle = DefaultVisualStyle(alertStyle: self.preferredStyle)
+    public lazy var visualStyle: AlertVisualStyle = AlertVisualStyle(alertStyle: self.preferredStyle)
 
     /// The alert's presentation style.
     private(set) public var preferredStyle: AlertControllerStyle = .Alert
 
     @IBOutlet private var alertView: AlertControllerView! = AlertView()
     private lazy var transitionDelegate: Transition = Transition(alertStyle: self.preferredStyle)
-    private var didAssignFirstResponder = false
 
     // MARK: - Initialization
 
@@ -238,9 +237,10 @@ public class AlertController: UIViewController {
         // Explanation of why the first responder is set here:
         // http://stackoverflow.com/a/19580888/751268
 
-        if self.behaviors?.contains(.AutomaticallyFocusTextField) == true && !self.didAssignFirstResponder {
-            self.textFields?.first?.becomeFirstResponder()
-            self.didAssignFirstResponder = true
+        if self.behaviors?.contains(.AutomaticallyFocusTextField) == true {
+            dispatch_once(&kDidAssignFirstResponderToken) {
+                self.textFields?.first?.becomeFirstResponder()
+            }
         }
     }
 
@@ -251,7 +251,7 @@ public class AlertController: UIViewController {
     // MARK: - Private
 
     private func listenForKeyboardChanges() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardChange:",
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardChange),
             name: UIKeyboardWillChangeFrameNotification, object: nil)
     }
 
@@ -327,7 +327,7 @@ public class AlertController: UIViewController {
             return
         }
 
-        let tapGesture = UITapGestureRecognizer(target: self, action: "chromeTapped:")
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(chromeTapped(_:)))
         tapGesture.cancelsTouchesInView = false
         self.view.addGestureRecognizer(tapGesture)
     }

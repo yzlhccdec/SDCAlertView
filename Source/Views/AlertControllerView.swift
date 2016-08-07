@@ -9,7 +9,7 @@ protocol AlertControllerViewRepresentable {
     var actionTappedHandler: (AlertAction -> Void)? { get set }
 
     var contentView: UIView! { get }
-    var visualStyle: VisualStyle! { get set }
+    var visualStyle: AlertVisualStyle! { get set }
 
     var topView: UIView { get }
 
@@ -37,7 +37,8 @@ extension AlertControllerViewRepresentable where Self: UIView {
 
     func addBehaviors(behaviors: AlertBehaviors) {
         if behaviors.contains(.DragTap) {
-            let panGesture = UIPanGestureRecognizer(target: self, action: "highlightActionForPanGesture:")
+            let panGesture = UIPanGestureRecognizer(target: self,
+                action: #selector(AlertControllerView.highlightActionForPanGesture(_:)))
             self.addGestureRecognizer(panGesture)
         }
 
@@ -81,7 +82,7 @@ class AlertControllerView: UIView, AlertControllerViewRepresentable {
     @IBOutlet var contentView: UIView! = UIView()
 
     var actions: [AlertAction] = []
-    var visualStyle: VisualStyle!
+    var visualStyle: AlertVisualStyle!
     var actionTappedHandler: (AlertAction -> Void)?
 
     func prepareLayout() {
