@@ -8,18 +8,27 @@ class Transition: NSObject, UIViewControllerTransitioningDelegate {
         self.alertStyle = alertStyle
     }
 
+#if swift(>=2.3)
+
     func presentationControllerForPresentedViewController(presented: UIViewController,
-        presentingViewController presenting: UIViewController, sourceViewController source: UIViewController)
-        -> UIPresentationController?
-    {
-        return PresentationController(presentedViewController: presented,
-                presentingViewController: presenting)
+                                                          presentingViewController presenting: UIViewController?, sourceViewController source: UIViewController)
+                    -> UIPresentationController? {
+        return PresentationController(presentedViewController: presented, presentingViewController: presenting)
     }
 
+#else
+
+    func presentationControllerForPresentedViewController(presented: UIViewController,
+                                                          presentingViewController presenting: UIViewController, sourceViewController source: UIViewController)
+                    -> UIPresentationController? {
+        return PresentationController(presentedViewController: presented, presentingViewController: presenting)
+    }
+
+#endif
+
     func animationControllerForPresentedController(presented: UIViewController,
-        presentingController presenting: UIViewController, sourceController source: UIViewController)
-        -> UIViewControllerAnimatedTransitioning?
-    {
+                                                   presentingController presenting: UIViewController, sourceController source: UIViewController)
+                    -> UIViewControllerAnimatedTransitioning? {
         if self.alertStyle == .ActionSheet {
             return nil
         }
@@ -30,8 +39,7 @@ class Transition: NSObject, UIViewControllerTransitioningDelegate {
     }
 
     func animationControllerForDismissedController(dismissed: UIViewController)
-        -> UIViewControllerAnimatedTransitioning?
-    {
+                    -> UIViewControllerAnimatedTransitioning? {
         return self.alertStyle == .Alert ? AnimationController() : nil
     }
 }
