@@ -85,11 +85,11 @@ private extension UIImage {
 
         let context = UIGraphicsGetCurrentContext()
         color.setFill()
-        CGContextFillRect(context, rect)
+        CGContextFillRect(context!, rect)
 
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
-        return image;
+        return image!;
     }
 }
