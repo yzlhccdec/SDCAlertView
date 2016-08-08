@@ -117,6 +117,10 @@ public class AlertVisualStyle: NSObject {
     public func textColor(forAction action: AlertAction?) -> UIColor? {
         return action?.style == .Destructive ? self.destructiveTextColor : self.normalTextColor
     }
+    
+    public func backgroundColor(forAction action: AlertAction?) -> UIColor? {
+        return nil
+    }
 
     /**
      The font for a given action
