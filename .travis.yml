@@ -1,11 +1,5 @@
 language: objective-c
-osx_image: xcode7
-
-#deploy:
-#  provider: script
-#  script: ./scripts/push.sh
-#  on:
-#    tags: true
+osx_image: xcode8.1
 
 before_install:
 - gem install xcpretty
