@@ -103,7 +103,7 @@ public class AlertController: UIViewController {
 
     /// The alert's custom behaviors. See `AlertBehaviors` for possible options.
     public lazy var behaviors: AlertBehaviors? =
-        AlertBehaviors.defaultBehaviorsForAlert(with: self.preferredStyle)
+            AlertBehaviors.defaultBehaviorsForAlert(with: self.preferredStyle)
 
     /// A closure that, when set, returns whether the alert or action sheet should dismiss after the user taps
     /// on an action. If it returns false, the AlertAction handler will not be executed.
@@ -127,8 +127,8 @@ public class AlertController: UIViewController {
     /// - parameter attributedTitle:   An optional stylized title
     /// - parameter attributedMessage: An optional stylized message
     /// - parameter preferredStyle:    The preferred presentation style of the alert. Default is `alert`.
-    public init(attributedTitle: NSAttributedString?, attributedMessage: NSAttributedString?,
-        preferredStyle: AlertControllerStyle = .alert)
+    public convenience init(attributedTitle: NSAttributedString?, attributedMessage: NSAttributedString?,
+                            preferredStyle: AlertControllerStyle = .alert)
     {
         self.init()
         self.preferredStyle = preferredStyle
@@ -235,7 +235,7 @@ public class AlertController: UIViewController {
 
     private func listenForKeyboardChanges() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardChange),
-            name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+                name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
     }
 
     @objc
@@ -281,20 +281,20 @@ public class AlertController: UIViewController {
         let margins = self.visualStyle.margins
 
         switch self.preferredStyle {
-            case .actionSheet:
-                let bounds = self.presentingViewController?.view.bounds ?? self.view.bounds
-                let width = min(bounds.width, bounds.height) - margins.left - margins.right
-                self.alertView.sdc_pinWidth(width * self.visualStyle.width)
-                self.alertView.sdc_horizontallyCenterInSuperview()
-                self.alertView.sdc_alignEdges(withSuperview: [.bottom], insets: margins)
-                self.alertView.sdc_setMaximumHeightToSuperviewHeight(withOffset: -margins.top)
+        case .actionSheet:
+            let bounds = self.presentingViewController?.view.bounds ?? self.view.bounds
+            let width = min(bounds.width, bounds.height) - margins.left - margins.right
+            self.alertView.sdc_pinWidth(width * self.visualStyle.width)
+            self.alertView.sdc_horizontallyCenterInSuperview()
+            self.alertView.sdc_alignEdges(withSuperview: [.bottom], insets: margins)
+            self.alertView.sdc_setMaximumHeightToSuperviewHeight(withOffset: -margins.top)
 
-            case .alert:
-                self.alertView.sdc_pinWidth(self.visualStyle.width)
-                self.alertView.sdc_centerInSuperview()
-                let maximumHeightOffset = -(margins.top + margins.bottom)
-                self.alertView.sdc_setMaximumHeightToSuperviewHeight(withOffset: maximumHeightOffset)
-                self.alertView.setContentCompressionResistancePriority(500, for: .vertical)
+        case .alert:
+            self.alertView.sdc_pinWidth(self.visualStyle.width)
+            self.alertView.sdc_centerInSuperview()
+            let maximumHeightOffset = -(margins.top + margins.bottom)
+            self.alertView.sdc_setMaximumHeightToSuperviewHeight(withOffset: maximumHeightOffset)
+            self.alertView.setContentCompressionResistancePriority(500, for: .vertical)
         }
     }
 
