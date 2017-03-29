@@ -1,5 +1,40 @@
 # CHANGELOG
 
+### 7.1.2
+**Bug Fixes**:
+- Fixes a bug that could incorrectly set cancel button attributes on action
+  sheets
+
+### 7.1.1
+**Bug Fixes**:
+- Fixes a retain cycle when adding text fields to the alert
+- Properly makes the first text field the first responder when presenting an
+  alert with text fields
+
+## 7.1
+**What's New:**
+- Makes `AlertVisualStyle` subclassable again
+- Adds support for custom background colors in action sheets
+- Adds Taptic feedback when dragging between buttons on iPhone 7
+
+**Bug Fixes:**
+- The dismissal animation looks like the system one again
+- Action sheets without an explicit cancel button won't show the inferred cancel button twice anymore
+- Button labels size and truncate as expected now, instead of being cut off
+
+### 7.0.1
+**Bug Fixes:**
+- Avoids an infinite loop/crash when using an action sheet without explicit cancel buttons
+
+# 7.0
+This is a compatibility update for Swift 3.
+
+**Bug Fixes:**
+- Correctly calls the cancel button's handler in action sheets
+
+# 6.0
+This is a compatibility update for Swift 2.3.
+
 ### 5.1.1
 **Bug Fixes:**
 - Gives action buttons the button trait for Voice Over
