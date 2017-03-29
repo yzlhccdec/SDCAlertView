@@ -115,7 +115,7 @@ open class AlertVisualStyle: NSObject {
         return action?.style == .destructive ? self.destructiveTextColor : self.normalTextColor
     }
     
-    public func backgroundColor(forAction action: AlertAction?) -> UIColor? {
+    open func backgroundColor(forAction action: AlertAction?) -> UIColor? {
         return nil
     }
 

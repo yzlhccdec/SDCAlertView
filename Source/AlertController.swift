@@ -28,14 +28,14 @@ public enum ActionLayout: Int {
 }
 
 @objc(SDCAlertController)
-public class AlertController: UIViewController {
+open class AlertController: UIViewController {
 
     private lazy var assignResponder: () -> Bool = { [weak self] _ in
         self?.textFields?.first?.becomeFirstResponder() ?? false
     }
 
     /// The alert's title. Directly uses `attributedTitle` without any attributes.
-    override public var title: String? {
+    override open var title: String? {
         get { return self.attributedTitle?.string }
         set { self.attributedTitle = newValue.map(NSAttributedString.init) }
     }
@@ -127,16 +127,15 @@ public class AlertController: UIViewController {
     /// - parameter attributedTitle:   An optional stylized title
     /// - parameter attributedMessage: An optional stylized message
     /// - parameter preferredStyle:    The preferred presentation style of the alert. Default is `alert`.
-    public convenience init(attributedTitle: NSAttributedString?, attributedMessage: NSAttributedString?,
-                            preferredStyle: AlertControllerStyle = .alert)
+    public init(attributedTitle: NSAttributedString?, attributedMessage: NSAttributedString?,
+                preferredStyle: AlertControllerStyle = .alert)
     {
-        self.init()
+        super.init(nibName: nil, bundle: nil)
         self.preferredStyle = preferredStyle
         self.commonInit()
 
         self.attributedTitle = attributedTitle
         self.attributedMessage = attributedMessage
-
     }
 
     /// Creates an alert with a plain title and message. To add styles to the title or message, use
@@ -145,13 +144,17 @@ public class AlertController: UIViewController {
     /// - parameter title:          An optional title
     /// - parameter message:        An optional message
     /// - parameter preferredStyle: The preferred presentation style of the alert. Default is `alert`.
-    public convenience init(title: String?, message: String?, preferredStyle: AlertControllerStyle = .alert) {
-        self.init()
+    public init(title: String?, message: String?, preferredStyle: AlertControllerStyle = .alert) {
+        super.init(nibName: nil, bundle: nil)
         self.preferredStyle = preferredStyle
         self.commonInit()
 
         self.title = title
         self.message = message
+    }
+
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     private func commonInit() {
@@ -204,19 +207,19 @@ public class AlertController: UIViewController {
     /// - parameter animated:   Whether to dismiss the alert animated.
     /// - parameter completion: An optional closure that's called when the dismissal finishes.
     @objc(dismissViewControllerAnimated:completion:)
-    public override func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
+    open override func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
         self.presentingViewController?.dismiss(animated: animated, completion: completion)
     }
 
     // MARK: - Override
 
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         self.listenForKeyboardChanges()
         self.configureAlertView()
     }
 
-    public override func viewDidLayoutSubviews() {
+    open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         // Explanation of why the first responder is set here:
@@ -227,7 +230,7 @@ public class AlertController: UIViewController {
         }
     }
 
-    public override var preferredStatusBarStyle: UIStatusBarStyle {
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
         return self.presentingViewController?.preferredStatusBarStyle ?? .default
     }
 
