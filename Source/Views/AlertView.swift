@@ -154,7 +154,6 @@ final class AlertView: UIView, AlertControllerViewRepresentable {
         ])
 
         self.pinBottomOfScrollView(to: self.messageLabel, withPriority: .defaultLow)
-
     }
 
     private func createMessageLabelConstraints() {
@@ -207,7 +206,7 @@ final class AlertView: UIView, AlertControllerViewRepresentable {
             self.contentView.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -widthOffset),
         ])
 
-        //self.pinBottomOfScrollView(to: self.contentView, withPriority: .defaultLow + 3.0)
+        self.pinBottomOfScrollView(to: self.contentView, withPriority: .defaultLow + 3.0)
     }
 
     private func createCollectionViewConstraints() {

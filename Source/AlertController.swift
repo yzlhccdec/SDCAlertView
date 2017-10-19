@@ -26,12 +26,12 @@ public enum ActionLayout: Int {
 }
 
 @objc(SDCAlertController)
-public class AlertController: UIViewController {
+open class AlertController: UIViewController {
 
     private var verticalCenter: NSLayoutConstraint?
 
     /// The alert's title. Directly uses `attributedTitle` without any attributes.
-    override public var title: String? {
+    override open var title: String? {
         get { return self.attributedTitle?.string }
         set { self.attributedTitle = newValue.map(NSAttributedString.init) }
     }
@@ -166,7 +166,7 @@ public class AlertController: UIViewController {
         self.message = message
     }
 
-    private init(preferredStyle: AlertControllerStyle) {
+    public init(preferredStyle: AlertControllerStyle) {
         switch preferredStyle {
         case .alert:
             self.alert = AlertView()
@@ -180,8 +180,9 @@ public class AlertController: UIViewController {
                 self.alert = AlertView()
             }
         }
-
         super.init(nibName: nil, bundle: nil)
+        self.preferredStyle = preferredStyle
+        self.commonInit()
     }
 
     public required init?(coder aDecoder: NSCoder) {
@@ -193,7 +194,7 @@ public class AlertController: UIViewController {
         self.transitioningDelegate = self.transitionDelegate
     }
 
-    public override func viewWillDisappear(_ animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.textFields?.first?.resignFirstResponder()
     }
@@ -238,23 +239,23 @@ public class AlertController: UIViewController {
     /// - parameter animated:   Whether to dismiss the alert animated.
     /// - parameter completion: An optional closure that's called when the dismissal finishes.
     @objc(dismissViewControllerAnimated:completion:)
-    public override func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
+    open override func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
         self.presentingViewController?.dismiss(animated: animated, completion: completion)
     }
 
     // MARK: - Override
 
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         self.listenForKeyboardChanges()
         self.configureAlertView()
     }
 
-    public override var preferredStatusBarStyle: UIStatusBarStyle {
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
         return self.presentingViewController?.preferredStatusBarStyle ?? .default
     }
 
-    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return self.presentingViewController?.supportedInterfaceOrientations ?? super.supportedInterfaceOrientations
     }
 
@@ -276,7 +277,7 @@ public class AlertController: UIViewController {
         self.alert.layoutIfNeeded()
     }
 
-    public override func becomeFirstResponder() -> Bool {
+    open override func becomeFirstResponder() -> Bool {
         if self.behaviors.contains(.automaticallyFocusTextField) {
             return self.textFields?.first?.becomeFirstResponder() ?? super.becomeFirstResponder()
         }
